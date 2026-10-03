@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Kalkulator Matriks</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #141e30, #243b55);
+            color: white;
+            padding: 30px 15px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 950px;
+            margin: auto;
+        }
+
+        /* HEADER */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header .icon {
+            font-size: 55px;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #cbd5e1;
+            font-size: 16px;
+        }
+
+        /* CARD */
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        /* OPERASI */
+        .operations {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .operations button {
+            padding: 15px 10px;
+            border: none;
+            border-radius: 12px;
+            background: #334155;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .operations button:hover {
+            background: #6366f1;
+            transform: translateY(-3px);
+        }
+
+        .operations button.active {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            box-shadow: 0 5px 20px rgba(99,102,241,0.4);
+        }
+
+        /* UKURAN */
+        .size-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .size-box {
+            background: rgba(0,0,0,0.15);
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .size-box h3 {
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .input-group input {
+            width: 70px;
+            padding: 12px;
+            border: none;
+            outline: none;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        /* MATRIKS */
+        .matrices {
+            display: flex;
+            justify-content: center;
+            gap: 70px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .matrix-card {
+            text-align: center;
+        }
+
+        .matrix-card h2 {
+            margin-bottom: 20px;
+        }
+
+        .matrix {
+            display: inline-grid;
+            grid-template-columns: repeat(2, 65px);
+            gap: 8px;
+            padding: 15px;
+            border-left: 4px solid #8b5cf6;
+            border-right: 4px solid #8b5cf6;
+            border-radius: 10px;
+        }
+
+        .matrix input {
+            width: 65px;
+            height: 50px;
+            border: none;
+            outline: none;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 17px;
+            background: white;
+            color: #1e293b;
+            transition: 0.2s;
+        }
+
+        .matrix input:focus {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 3px #8b5cf6;
+        }
+
+        /* TOMBOL */
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            border: none;
+            padding: 14px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-hitung {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+        }
+
+        .btn-hitung:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(99,102,241,0.4);
+        }
+
+        .btn-reset {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-reset:hover {
+            background: #dc2626;
+        }
+
+        /* HASIL */
+        .hasil {
+            text-align: center;
+            padding: 25px;
+            background: rgba(0,0,0,0.15);
+            border-radius: 15px;
+        }
+
+        .hasil h2 {
+            color: #a78bfa;
+            margin-bottom: 20px;
+        }
+
+        .hasil-matrix {
+            display: inline-grid;
+            grid-template-columns: repeat(2, 70px);
+            gap: 8px;
+            padding: 15px;
+            border-left: 4px solid #22c55e;
+            border-right: 4px solid #22c55e;
+        }
+
+        .hasil-matrix div {
+            width: 70px;
+            height: 50px;
+            background: white;
+            color: #1e293b;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            color: #94a3b8;
+            margin-top: 25px;
+            font-size: 14px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 700px) {
+
+            .header h1 {
+                font-size: 28px;
+            }
+
+            .operations {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .size-container {
+                grid-template-columns: 1fr;
+            }
+
+            .matrices {
+                gap: 35px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 400px) {
+
+            .operations {
+                grid-template-columns: 1fr;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+
+        <div class="icon">🧮</div>
+
+        <h1>Kalkulator Matriks</h1>
+
+        <p>
+            Hitung operasi matriks dengan cepat dan mudah
+        </p>
+
+    </div>
+
+
+    <!-- OPERASI -->
+    <div class="card">
+
+        <h2>⚙️ Pilih Operasi</h2>
+
+        <div class="operations">
+
+            <button class="active">
+                ➕ Penjumlahan
+            </button>
+
+            <button>
+                ➖ Pengurangan
+            </button>
+
+            <button>
+                ✖️ Perkalian
+            </button>
+
+            <button>
+                🔄 Transpose
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- UKURAN MATRIKS -->
+    <div class="card">
+
+        <h2>📐 Ukuran Matriks</h2>
+
+        <div class="size-container">
+
+            <div class="size-box">
+
+                <h3>Matriks A</h3>
+
+                <div class="input-group">
+
+                    <label>Baris</label>
+
+                    <input
+                        type="number"
+                        value="2"
+                        min="1"
+                        max="10"
+                    >
+
+                    <span>×</span>
+
+                    <label>Kolom</label>
+
+                    <input
+                        type="number"
+                        value="2"
+                        min="1"
+                        max="10"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="size-box">
+
+                <h3>Matriks B</h3>
+
+                <div class="input-group">
+
+                    <label>Baris</label>
+
+                    <input
+                        type="number"
+                        value="2"
+                        min="1"
+                        max="10"
+                    >
+
+                    <span>×</span>
+
+                    <label>Kolom</label>
+
+                    <input
+                        type="number"
+                        value="2"
+                        min="1"
+                        max="10"
+                    >
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- INPUT MATRIKS -->
+    <div class="card">
+
+        <h2>🔢 Masukkan Nilai Matriks</h2>
+
+        <div class="matrices">
+
+            <!-- MATRIKS A -->
+            <div class="matrix-card">
+
+                <h2>Matriks A</h2>
+
+                <div class="matrix">
+
+                    <input type="number" value="1">
+                    <input type="number" value="2">
+
+                    <input type="number" value="3">
+                    <input type="number" value="4">
+
+                </div>
+
+            </div>
+
+
+            <!-- MATRIKS B -->
+            <div class="matrix-card">
+
+                <h2>Matriks B</h2>
+
+                <div class="matrix">
+
+                    <input type="number" value="5">
+                    <input type="number" value="6">
+
+                    <input type="number" value="7">
+                    <input type="number" value="8">
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- BUTTON -->
+        <div class="buttons">
+
+            <button class="btn btn-hitung">
+                🧮 Hitung Matriks
+            </button>
+
+            <button class="btn btn-reset">
+                ↺ Reset
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- HASIL -->
+    <div class="card">
+
+        <div class="hasil">
+
+            <h2>✨ Hasil Perhitungan</h2>
+
+            <div class="hasil-matrix">
+
+                <div>6</div>
+                <div>8</div>
+
+                <div>10</div>
+                <div>12</div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+    <footer>
+        © 2026 Kalkulator Matriks • Dibuat dengan HTML & CSS
+    </footer>
+
+</div>
+
+</body>
+</html>
